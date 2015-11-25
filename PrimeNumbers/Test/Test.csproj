@@ -4,7 +4,7 @@
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProjectGuid>{DECB1B71-BD51-4BB2-A9D3-24EC6BBEF461}</ProjectGuid>
+    <ProjectGuid>{A0AC64EB-DA0B-4F15-92A3-0AA2CB6CD6B4}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>Test</RootNamespace>
@@ -44,17 +44,14 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="RomanNumeralsTests.cs" />
+    <Compile Include="Tests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\RomanNumerals\RomanNumerals.csproj">
-      <Project>{93a7b632-ae2e-4ac6-87f8-d729963b65bf}</Project>
-      <Name>RomanNumerals</Name>
+    <ProjectReference Include="..\PrimeNumbers\PrimeNumbers.csproj">
+      <Project>{9dc4d4a8-3565-4812-bdd7-1567746c8371}</Project>
+      <Name>PrimeNumbers</Name>
     </ProjectReference>
-  </ItemGroup>
-  <ItemGroup>
-    <Service Include="{82A7F48D-3B50-4B1E-B82E-3ADA8210C358}" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
