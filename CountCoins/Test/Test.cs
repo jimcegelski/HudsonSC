@@ -10,7 +10,7 @@ namespace Test
         {
             var coinCollections = CoinCounter.GetCoinCollections(1);
             Assert.AreEqual(1, coinCollections.Count);
-            //Assert.AreEqual("A penny",coinCollections[0] );
+            Assert.IsTrue(coinCollections.Contains("A penny"));
         }
 
         [Test]
@@ -18,7 +18,7 @@ namespace Test
         {
             var coinCollections = CoinCounter.GetCoinCollections(2);
             Assert.AreEqual(1, coinCollections.Count);
-            //Assert.AreEqual("2 pennies", coinCollections[0]);
+            Assert.IsTrue(coinCollections.Contains("2 pennies"));
         }
 
         [Test]
@@ -26,8 +26,8 @@ namespace Test
         {
             var coinCollections = CoinCounter.GetCoinCollections(5);
             Assert.AreEqual(2, coinCollections.Count);
-            //Assert.AreEqual("5 pennies", coinCollections[0]);
-            //Assert.AreEqual("A nickel", coinCollections[1]);
+            Assert.IsTrue(coinCollections.Contains("5 pennies"));
+            Assert.IsTrue(coinCollections.Contains("A nickel"));
         }
 
         [Test]
@@ -35,8 +35,8 @@ namespace Test
         {
             var coinCollections = CoinCounter.GetCoinCollections(6);
             Assert.AreEqual(2, coinCollections.Count);
-            //Assert.AreEqual("6 pennies", coinCollections[0]);
-            //Assert.AreEqual("A penny and a nickel", coinCollections[1]);
+            Assert.IsTrue(coinCollections.Contains("6 pennies"));
+            Assert.IsTrue(coinCollections.Contains("A penny and a nickel"));
         }
 
         [Test]
@@ -44,6 +44,10 @@ namespace Test
         {
             var coinCollections = CoinCounter.GetCoinCollections(10);
             Assert.AreEqual(4, coinCollections.Count);
+            Assert.IsTrue(coinCollections.Contains("10 pennies"));
+            Assert.IsTrue(coinCollections.Contains("2 nickels"));
+            Assert.IsTrue(coinCollections.Contains("5 pennies and a nickel"));
+            Assert.IsTrue(coinCollections.Contains("A dime"));
         }
 
         [Test]
@@ -51,6 +55,12 @@ namespace Test
         {
             var coinCollections = CoinCounter.GetCoinCollections(15);
             Assert.AreEqual(6, coinCollections.Count);
+            Assert.IsTrue(coinCollections.Contains("15 pennies"));
+            Assert.IsTrue(coinCollections.Contains("10 pennies and a nickel"));
+            Assert.IsTrue(coinCollections.Contains("5 pennies and 2 nickels"));
+            Assert.IsTrue(coinCollections.Contains("5 pennies and a dime"));
+            Assert.IsTrue(coinCollections.Contains("3 nickels"));
+            Assert.IsTrue(coinCollections.Contains("A nickel and a dime"));
         }
 
         [Test]

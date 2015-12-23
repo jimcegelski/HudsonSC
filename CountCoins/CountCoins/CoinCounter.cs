@@ -81,27 +81,23 @@ namespace CountCoins
 
         public static string ConvertCoinType(int coinType, int numberOfCoins)
         {
-            if (coinType == 1)
+            if (numberOfCoins == 1)
             {
-                if (numberOfCoins == 1) return "penny";
-                return "pennies";
+                switch (coinType)
+                {
+                    case 1: return "penny";
+                    case 5: return "nickel";
+                    case 10: return "dime";
+                    default: return "quarter";
+                }
             }
-            if (coinType == 5)
+            switch (coinType)
             {
-                if (numberOfCoins == 1) return "nickel";
-                return "nickles";
+                case 1: return "pennies";
+                case 5: return "nickels";
+                case 10: return "dimes";
+                default: return "quarters";
             }
-            if (coinType == 10)
-            {
-                if (numberOfCoins == 1) return "dime";
-                return "dimes";
-            }
-            if (coinType == 25)
-            {
-                if (numberOfCoins == 1) return "quarter";
-                return "quarters";
-            }
-            return string.Empty;
         }
 
         public static int GetNextLowestCoinType(int coinType)
