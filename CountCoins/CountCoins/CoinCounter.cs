@@ -5,6 +5,14 @@ namespace CountCoins
 {
     public class CoinCounter
     {
+        public enum Coins
+        {
+            Penny = 1,
+            Nickel = 5,
+            Dime = 10,
+            Quarter = 25
+        }
+
         public static List<string> GetCoinCollections(int centsToStartWith)
         {
             var results = new List<string>();
@@ -61,42 +69,20 @@ namespace CountCoins
             return result;
         }
 
-        //private static string ConvertCollectionIntoNumberString(Dictionary<int, int> coinCollection)
-        //{
-        //    return
-        //        $"{GetNumberOfCoins(25, coinCollection)} {GetNumberOfCoins(10, coinCollection)} {GetNumberOfCoins(5, coinCollection)} {GetNumberOfCoins(1, coinCollection)}";
-        //}
+        private static string ConvertCollectionIntoNumberString(Dictionary<int, int> coinCollection) => $"{GetNumberOfCoins(25, coinCollection)} {GetNumberOfCoins(10, coinCollection)} {GetNumberOfCoins(5, coinCollection)} {GetNumberOfCoins(1, coinCollection)}";
 
-        //private static string GetNumberOfCoins(int denomination, Dictionary<int, int> collection)
-        //{
-        //    if (!collection.ContainsKey(denomination)) return "0";
-        //    return collection[denomination].ToString();
-        //}
+        private static string GetNumberOfCoins(int denomination, IReadOnlyDictionary<int, int> collection) => !collection.ContainsKey(denomination) ? "0" : collection[denomination].ToString();
 
-        public static string ConvertNumberToString(int number)
-        {
-            if (number == 1) return "a";
-            return number.ToString();
-        }
+        public static string ConvertNumberToString(int number) => (number == 1) ? "a" : number.ToString();
 
         public static string ConvertCoinType(int coinType, int numberOfCoins)
         {
-            if (numberOfCoins == 1)
-            {
-                switch (coinType)
-                {
-                    case 1: return "penny";
-                    case 5: return "nickel";
-                    case 10: return "dime";
-                    default: return "quarter";
-                }
-            }
             switch (coinType)
             {
-                case 1: return "pennies";
-                case 5: return "nickels";
-                case 10: return "dimes";
-                default: return "quarters";
+                case 1: return (numberOfCoins == 1) ? "penny" : "pennies";
+                case 5: return (numberOfCoins == 1) ? "nickel" : "nickels";
+                case 10: return (numberOfCoins == 1) ? "dime" : "dimes";
+                default: return (numberOfCoins == 1) ? "quarter" : "quarters";
             }
         }
 
@@ -104,33 +90,19 @@ namespace CountCoins
         {
             switch (coinType)
             {
-                case 25:
-                    return 10;
-                case 10:
-                    return 5;
-                case 5:
-                    return 1;
-                default:
-                    return int.MinValue;
+                case 25: return 10;
+                case 10: return 5;
+                case 5: return 1;
+                default: return int.MinValue;
             }
         }
 
-       private static int GetCollectionTotal(Dictionary<int, int> collection)
+        private static int GetCollectionTotal(Dictionary<int, int> collection) => collection.Aggregate(0, (current, pair) => current + (pair.Key * pair.Value));
+
+        private static void AddCoinToCollection(int coinToAdd, IDictionary<int, int> collection, int numberOfCoinsToAdd = 1)
         {
-            return collection.Aggregate(0, (current, pair) => current + (pair.Key * pair.Value));
+            if (!collection.ContainsKey(coinToAdd)) collection[coinToAdd] = numberOfCoinsToAdd;
+            else collection[coinToAdd] += numberOfCoinsToAdd;
         }
-
-        private static void AddCoinToCollection(int coinToAdd, Dictionary<int, int> collection, int numberOfCoinsToAdd = 1)
-        {
-            if (!collection.ContainsKey(coinToAdd))
-            {
-                collection[coinToAdd] = numberOfCoinsToAdd;
-            }
-            else
-            {
-                collection[coinToAdd] += numberOfCoinsToAdd;
-            }
-        }
-
     }
 }
