@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Linq;
 
 namespace CountCoins
 {
@@ -6,60 +7,43 @@ namespace CountCoins
     {
         public static List<string> GetCoinCollections(int centsToStartWith)
         {
-            var result = new List<string>();
-            var coinToStartWith = 10;
-            while (coinToStartWith > 0)
+            var results = new List<string>();
+            var coinCollection = new Dictionary<int,int>();
+
+            Process(centsToStartWith, centsToStartWith, results, 25, coinCollection);
+                
+            return results;
+        }
+
+        private static void Process(int centsToStartWith, int centsLeftOver, IList<string> results, int coinDenomination, Dictionary<int,int> coinCollection)
+        {
+            for (var numberOfCoins = 0; numberOfCoins <= centsLeftOver / coinDenomination; numberOfCoins++)
             {
-                var centsRemaining = centsToStartWith;
-                var collection = new Dictionary<int, int>();
+                var newCoinCollection = CloneCollection(coinCollection);
+                if (numberOfCoins > 0) AddCoinToCollection(coinDenomination, newCoinCollection, numberOfCoins);
 
-                if (coinToStartWith <= centsRemaining)
-                {
-                    collection[coinToStartWith] = 1;
-                    centsRemaining = centsRemaining - coinToStartWith;
-                    AddCoinToCollection(coinToStartWith, ref centsRemaining, collection);
-                }
+                if (GetNextLowestCoinType(coinDenomination) > int.MinValue)
+                    Process(centsToStartWith, centsToStartWith - GetCollectionTotal(newCoinCollection), results, GetNextLowestCoinType(coinDenomination), newCoinCollection);
+                
+                if (GetCollectionTotal(newCoinCollection) < centsToStartWith) AddCoinToCollection(1, newCoinCollection, centsToStartWith - GetCollectionTotal(newCoinCollection));
 
-                if (collection.Count > 0) result.Add(ConvertCollectionIntoString(collection));
+                var resultString = ConvertCollectionIntoString(newCoinCollection);
+                if (results.IndexOf(resultString) < 0) results.Add(resultString);
+            }   
+        }
 
-                coinToStartWith = GetNextLowestCoinType(coinToStartWith);
-            }
-            
-            return result;
+        private static Dictionary<int, int> CloneCollection(Dictionary<int, int> collectionToClone)
+        {
+            return collectionToClone.ToDictionary(kvp => kvp.Key, kvp => kvp.Value);
         }
         
-        private static Dictionary<int, int> CreateCoinCollectionStartingWithSpecificCoin(int coinTypeToStartWith,
-            int centsToStartWith)
-        {
-            var collection = new Dictionary<int, int>();
-            if (coinTypeToStartWith <= centsToStartWith)
-            {
-                collection[coinTypeToStartWith] = 1;
-                centsToStartWith = centsToStartWith - coinTypeToStartWith;
-                AddCoinToCollection(coinTypeToStartWith, ref centsToStartWith, collection);
-            }
-
-            return collection;
-        }
-        
-        private static void AddCoinToCollection(int coinTypeToAdd, ref int centsToStartWith, Dictionary<int, int> coinCollection)
-        {
-            while (centsToStartWith > 0)
-            {
-                if (coinTypeToAdd > centsToStartWith) coinTypeToAdd = GetNextLowestCoinType(coinTypeToAdd);
-                if (!coinCollection.ContainsKey(coinTypeToAdd))
-                {
-                    coinCollection.Add(coinTypeToAdd, 0);
-                }
-                coinCollection[coinTypeToAdd] ++;
-                centsToStartWith = centsToStartWith - coinTypeToAdd;
-            }
-        }
-
         private static string ConvertCollectionIntoString(Dictionary<int, int> coinCollection)
         {
             var result = string.Empty;
-            foreach (var coinType in coinCollection.Keys)
+            var coinList = coinCollection.Keys.ToList();
+            coinList.Sort();
+
+            foreach (var coinType in coinList)
             {
                 if (result != string.Empty) result += " and ";
                 var numberString = ConvertNumberToString(coinCollection[coinType]);
@@ -76,6 +60,18 @@ namespace CountCoins
             }
             return result;
         }
+
+        //private static string ConvertCollectionIntoNumberString(Dictionary<int, int> coinCollection)
+        //{
+        //    return
+        //        $"{GetNumberOfCoins(25, coinCollection)} {GetNumberOfCoins(10, coinCollection)} {GetNumberOfCoins(5, coinCollection)} {GetNumberOfCoins(1, coinCollection)}";
+        //}
+
+        //private static string GetNumberOfCoins(int denomination, Dictionary<int, int> collection)
+        //{
+        //    if (!collection.ContainsKey(denomination)) return "0";
+        //    return collection[denomination].ToString();
+        //}
 
         public static string ConvertNumberToString(int number)
         {
@@ -100,6 +96,11 @@ namespace CountCoins
                 if (numberOfCoins == 1) return "dime";
                 return "dimes";
             }
+            if (coinType == 25)
+            {
+                if (numberOfCoins == 1) return "quarter";
+                return "quarters";
+            }
             return string.Empty;
         }
 
@@ -107,13 +108,33 @@ namespace CountCoins
         {
             switch (coinType)
             {
+                case 25:
+                    return 10;
                 case 10:
                     return 5;
                 case 5:
                     return 1;
                 default:
-                    return 0;
+                    return int.MinValue;
             }
         }
+
+       private static int GetCollectionTotal(Dictionary<int, int> collection)
+        {
+            return collection.Aggregate(0, (current, pair) => current + (pair.Key * pair.Value));
+        }
+
+        private static void AddCoinToCollection(int coinToAdd, Dictionary<int, int> collection, int numberOfCoinsToAdd = 1)
+        {
+            if (!collection.ContainsKey(coinToAdd))
+            {
+                collection[coinToAdd] = numberOfCoinsToAdd;
+            }
+            else
+            {
+                collection[coinToAdd] += numberOfCoinsToAdd;
+            }
+        }
+
     }
 }
