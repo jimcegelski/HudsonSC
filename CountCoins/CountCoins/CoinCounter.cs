@@ -40,11 +40,8 @@ namespace CountCoins
             }   
         }
 
-        private static Dictionary<int, int> CloneCollection(Dictionary<int, int> collectionToClone)
-        {
-            return collectionToClone.ToDictionary(kvp => kvp.Key, kvp => kvp.Value);
-        }
-        
+        private static Dictionary<int, int> CloneCollection(Dictionary<int, int> collectionToClone) => collectionToClone.ToDictionary(kvp => kvp.Key, kvp => kvp.Value);
+
         private static string ConvertCollectionIntoString(Dictionary<int, int> coinCollection)
         {
             var result = string.Empty;
