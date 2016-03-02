@@ -12,6 +12,7 @@
         
         public static string GetNumberName(int numberToTest)
         {
+            if (numberToTest == 0) return "zero";
             return $"{HandleNumber(ref numberToTest, 1000000, " million")}" +
                    $"{HandleNumber(ref numberToTest, 1000, " thousand")}" +
                    $"{HandleNumber(ref numberToTest, 1, "")}";

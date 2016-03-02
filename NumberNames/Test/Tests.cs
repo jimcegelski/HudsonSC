@@ -5,6 +5,7 @@ namespace Test
 {
     public class Tests
     {
+        [TestCase("zero", 0)]
         [TestCase("one", 1)]
         [TestCase("two", 2)]
         [TestCase("nine", 9)]
